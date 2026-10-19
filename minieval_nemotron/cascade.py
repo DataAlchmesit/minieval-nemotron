@@ -18,6 +18,7 @@ from .policy import CascadePolicy
 from .prompts import SYSTEM_PROMPT, user_message
 from .response_check import CheckResult, check_reply
 from .router import route
+from .secrets_redact import redact, scan
 from .types import Candidate, Decision, LocalResult
 
 CallModel = Callable[[str, str, str], str]
@@ -62,10 +63,24 @@ def decide(
     policy = policy or CascadePolicy()
     fp = policy.fingerprint()
 
-    # Only ever send the redacted source to a hosted model, and check quotes
-    # against that same text.
-    if local.model_source is not None and local.model_source != candidate.source:
-        candidate = replace(candidate, source=local.model_source)
+    # Secrets guard (R1). Runs whatever minieval-pro version is installed.
+    fact_scan = scan(candidate.fact)
+    if fact_scan.has_secret:
+        return Decision(
+            verdict="REJECT", route=["local"], rules=["R1"], policy_fingerprint=fp,
+            origin=candidate.origin, local_verdict=local.verdict,
+            reason="Not stored: the fact contains a " + ", ".join(fact_scan.kinds) + ".",
+            local_reason=local.reason, local_policy_fingerprint=local.policy_fingerprint,
+        )
+
+    # Only ever send a redacted source to a hosted model, and check quotes
+    # against that same redacted text.
+    base_source = local.model_source if local.model_source is not None else candidate.source
+    safe_source = redact(base_source)
+    if safe_source != candidate.source:
+        candidate = replace(candidate, source=safe_source)
+    if local.narrowed_sentence:
+        local = replace(local, narrowed_sentence=redact(local.narrowed_sentence))
 
     r = route(candidate, local, policy)
 

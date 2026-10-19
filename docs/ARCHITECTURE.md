@@ -66,7 +66,7 @@ Checked in order. A fact skips the models only if a fast rule settles it.
 
 | Rule | Trigger | Goes to |
 |---|---|---|
-| R1 | Local secrets guard rejected the fact (password, API key, token) | REJECT, final |
+| R1 | The fact contains a secret (password, API key, token, card number) | REJECT, final, never sent to a model |
 | R2 | Injection phrasing (strict for web/pasted text, narrow list for the user's own messages) | REVIEW, no model |
 | R11 | A fact **about the user** that came from web or pasted content | REVIEW, no model |
 | R3 | Attribution flag ("my brother is a lawyer") | Combined call |
@@ -86,7 +86,8 @@ Checked in order. A fact skips the models only if a fast rule settles it.
 3. **Fail closed.** Any failure ends in REVIEW, never STORE.
 4. **Origin matters.** Your identity comes from you, not from a web page. Web facts can never overwrite what the user said.
 5. **Reproducible.** Temperature 0. Model IDs, prompt version and thresholds are inside the policy's SHA-256 fingerprint, which is logged with every decision.
-6. **Source is data, not instructions.** The model has no tools and can return only a label and a quote, so text inside a source can't make it act.
+6. **Secrets never leave the machine.** A fact containing a password, API key, token or card number is rejected outright. Any source text is redacted before it is sent to Token Factory, whatever minieval-pro version is installed.
+7. **Source is data, not instructions.** The model has no tools and can return only a label and a quote, so text inside a source can't make it act.
 
 ## 5. Where each part lives in the code
 
@@ -98,7 +99,8 @@ Checked in order. A fact skips the models only if a fast rule settles it.
 | Response check | `minieval_nemotron/response_check.py` | Built |
 | `decide()`, retry, fail-closed, Ultra on "unclear" | `minieval_nemotron/cascade.py` | Built |
 | Token Factory connection | `minieval_nemotron/nemotron_client.py` | Built, not yet run live |
-| Local checks → `LocalResult` adapter (redacts secrets before any model call) | `minieval_nemotron/local_adapter.py` | Built |
+| Local checks → `LocalResult` adapter | `minieval_nemotron/local_adapter.py` | Built |
+| Secrets guard: rejects facts with secrets, redacts sources before any model call | `minieval_nemotron/secrets_redact.py` | Built |
 | `adjudicate()` + R8 | — | Planned |
 | Fact extractor (Nano) | — | Planned |
 | Tavily web input | — | Planned |

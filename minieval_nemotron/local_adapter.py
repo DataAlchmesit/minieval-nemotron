@@ -10,8 +10,10 @@ Field mapping (from minieval_pro/gate.py):
     GateDecision.relatedness      -> relatedness (only set on the contradiction path)
     GateDecision.evidence_span    -> narrowed_sentence (None = single-sentence source,
                                      so the whole source IS the sentence)
-    GateDecision.source           -> model_source (already redacted by the
-                                     secrets guard, so safe to send to an API)
+    GateDecision.source           -> model_source (redacted by minieval-pro only
+                                     in versions that have a secrets guard; the
+                                     cascade redacts it again regardless, see
+                                     secrets_redact.py)
     reason "Possible misattribution..."  -> attribution_flag
     reason "Not stored: ..." + REJECT    -> safety_flag (secrets guard: final)
 
