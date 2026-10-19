@@ -28,4 +28,14 @@ what was built or significantly changed during it. One entry per working day.
 - Reasoning on/off: _(which mode returned clean JSON, and latency difference)_
 
 ### Day 2 — Oct 11
-- _(fill in)_
+
+- Built the verification cascade: router (R1–R12), evidence-span response check,
+  one retry, fail-closed to REVIEW, Ultra escalation on "unclear". 33 offline tests.
+- Connected minieval-pro's real MemoryGate via an adapter. Credential-like text is
+  redacted before any model call, so secrets never reach Token Factory.
+- Ran the real gate on 8 cases: Delhi→Bangalore confirmed as a local REJECT (goes to
+  Nemotron); an injection email was locally STORED at 0.995 faithfulness and stopped
+  only by rule R2.
+- Found a real gap: "I'll probably switch to Python next year" was stored at 0.97.
+  Added R12 (hedged/future wording) to escalate it.
+- Docs: architecture diagrams added; clarified that toxic-bert is not used by the gate.
