@@ -42,7 +42,7 @@ flowchart TD
     T0["Tier 0: local checks<br/>NLI, attribution, relatedness, safety"] --> R{"Router<br/>rules R1 to R11"}
 
     R -- "R1, R2, R11, R9" --> F["Fast verdict<br/>no model call"]
-    R -- "R3 to R7" --> J["Combined call<br/>Nemotron Nano or Super"]
+    R -- "R3 to R7, R12" --> J["Combined call<br/>Nemotron Nano or Super"]
     R -- "R8 overwrite conflict" --> U["Nemotron Ultra"]
     J -- "unclear" --> U
 
@@ -66,7 +66,7 @@ Checked in order. A fact skips the models only if a fast rule settles it.
 
 | Rule | Trigger | Goes to |
 |---|---|---|
-| R1 | Local safety flag | REJECT, final |
+| R1 | Local secrets guard rejected the fact (password, API key, token) | REJECT, final |
 | R2 | Injection phrasing (strict for web/pasted text, narrow list for the user's own messages) | REVIEW, no model |
 | R11 | A fact **about the user** that came from web or pasted content | REVIEW, no model |
 | R3 | Attribution flag ("my brother is a lawyer") | Combined call |
@@ -74,6 +74,7 @@ Checked in order. A fact skips the models only if a fast rule settles it.
 | R5 | Temporal wording ("moved from", "used to", "no longer", ...) | Combined call |
 | R6 | Uncertain band (local REVIEW) | Combined call |
 | R7 | Contradiction on a low-relatedness pair | Combined call |
+| R12 | Hedged or future wording ("I think", "probably", "next year", ...) | Combined call |
 | R8 | Overwrite conflict in `adjudicate()`, or the combined call says "unclear" | Score comparison, then Ultra |
 | R9 | Nothing flagged, local STORE | Fast STORE |
 | R10 | Timeout, rate limit, bad JSON, no valid quote after 1 retry | REVIEW |
@@ -93,11 +94,11 @@ Checked in order. A fact skips the models only if a fast rule settles it.
 |---|---|---|
 | Policy + fingerprint | `minieval_nemotron/policy.py` | Built |
 | Prompt + JSON shape | `minieval_nemotron/prompts.py` | Built |
-| Router (R1–R7, R9, R11) | `minieval_nemotron/router.py` | Built |
+| Router (R1–R7, R9, R11, R12) | `minieval_nemotron/router.py` | Built |
 | Response check | `minieval_nemotron/response_check.py` | Built |
 | `decide()`, retry, fail-closed, Ultra on "unclear" | `minieval_nemotron/cascade.py` | Built |
 | Token Factory connection | `minieval_nemotron/nemotron_client.py` | Built, not yet run live |
-| Local checks → `LocalResult` adapter | — | Next |
+| Local checks → `LocalResult` adapter (redacts secrets before any model call) | `minieval_nemotron/local_adapter.py` | Built |
 | `adjudicate()` + R8 | — | Planned |
 | Fact extractor (Nano) | — | Planned |
 | Tavily web input | — | Planned |
