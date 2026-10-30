@@ -1,0 +1,661 @@
+{
+  "run_at": "2026-10-30T11:25:55",
+  "policy": {
+    "name": "minieval-nemotron-default",
+    "version": "0.1.0",
+    "judge_model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "escalation_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "prompt_version": "combined-v0.2",
+    "extractor_prompt_version": "extract-v0.1",
+    "temperature": 0.0,
+    "judge_reasoning": false,
+    "min_relatedness": 0.58,
+    "temporal_cues": [
+      "\\bmoved (from|to|out|back)\\b",
+      "\\bused to\\b",
+      "\\bno longer\\b",
+      "\\banymore\\b",
+      "\\bpreviously\\b",
+      "\\bformerly\\b",
+      "\\bformer\\b",
+      "\\bswitched (from|to)\\b",
+      "\\bquit\\b",
+      "\\bleft (my|the|her|his)\\b",
+      "\\bnow\\b",
+      "\\bsince\\b",
+      "\\blast (week|month|year)\\b",
+      "\\brecently\\b",
+      "\\bthese days\\b"
+    ],
+    "hedge_cues": [
+      "\\bi think\\b",
+      "\\bprobably\\b",
+      "\\bmaybe\\b",
+      "\\bmight\\b",
+      "\\bperhaps\\b",
+      "\\bnot sure\\b",
+      "\\b(planning|plan|hoping|hope|want|going|thinking about|considering) (to|of)\\b",
+      "\\bconsidering\\b",
+      "\\bwill\\b",
+      "\\bi'll\\b",
+      "\\bnext (week|month|year|summer|winter|spring|fall)\\b",
+      "\\bsomeday\\b",
+      "\\bif\\b"
+    ],
+    "injection_strict": [
+      "\\bignore (all |any |the |your |previous |prior |earlier )*(instructions|rules|prompts?)\\b",
+      "\\bdisregard (all |any |the |your |previous |prior )*(instructions|rules)\\b",
+      "\\bsystem prompt\\b",
+      "\\b(new|updated) instructions\\b",
+      "\\boverride\\b",
+      "\\byou (must|should|need to) (store|remember|save|approve|add|record)\\b",
+      "\\b(approve|store|save|remember|record) (this|it|the following)\\b",
+      "\\bas an ai\\b",
+      "\\b(assistant|ai|model|llm)\\s*[:,]\\s*(please )?(store|remember|save|approve)\\b"
+    ],
+    "injection_user": [
+      "\\bignore (all |any |the |your |previous |prior |earlier )*(instructions|rules|prompts?)\\b",
+      "\\bdisregard (all |any |the |your |previous |prior )*(instructions|rules)\\b",
+      "\\bsystem prompt\\b",
+      "\\b(approve|store|save) (this|it) regardless\\b"
+    ],
+    "retries_on_bad_reply": 1,
+    "allow_attribution_override": false,
+    "hedge_never_auto_store": true,
+    "extra": {}
+  },
+  "policy_fingerprint": "cab5cf6a2101236061af1e2407bd9b88d53dde66652592344d6846c94533f8cc",
+  "results": [
+    {
+      "case": "fam_001",
+      "fact": "The user is a lawyer.",
+      "source": "My brother is a lawyer and he helped me with the contract.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge > escalation",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": "My brother is a lawyer",
+      "suggested_fact": "The user's brother is a lawyer.",
+      "model_calls": 2,
+      "tokens": 1039,
+      "model_latency_s": 1.77,
+      "local_latency_s": 2.73,
+      "total_latency_s": 4.5,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"unclear\",\n  \"temporal\": \"current\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"\"\n}",
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"current\",\n  \"verdict\": \"contradicted\",\n  \"quote\": \"My brother is a lawyer\",\n  \"suggested_fact\": \"The user's brother is a lawyer.\"\n}"
+      ],
+      "errors": [],
+      "group": "sibling_family_possession",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "fam_002",
+      "fact": "The user is a lawyer.",
+      "source": "Her brother is a lawyer and he helped with the contract.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": null,
+      "suggested_fact": "The user's brother is a lawyer.",
+      "model_calls": 1,
+      "tokens": 519,
+      "model_latency_s": 0.5,
+      "local_latency_s": 0.06,
+      "total_latency_s": 0.56,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"none\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"The user's brother is a lawyer.\"\n}"
+      ],
+      "errors": [],
+      "group": "sibling_family_possession",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "fam_003",
+      "fact": "The user teaches high school.",
+      "source": "My sister teaches high school and loves it.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": null,
+      "suggested_fact": "The user's sister teaches high school.",
+      "model_calls": 1,
+      "tokens": 516,
+      "model_latency_s": 0.51,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.56,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"current\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"The user's sister teaches high school.\"\n}"
+      ],
+      "errors": [],
+      "group": "sibling_family_possession",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "fam_004",
+      "fact": "The user lives in Boston.",
+      "source": "My mother lives in Boston and visits every summer.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Local attribution guard flagged this sentence; a model cannot override it.",
+      "quote": "My mother lives in Boston and visits every summer.",
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 516,
+      "model_latency_s": 0.49,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.55,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"current\",\n  \"verdict\": \"supported\",\n  \"quote\": \"My mother lives in Boston and visits every summer.\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "sibling_family_possession",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "fam_005",
+      "fact": "The user recently got married.",
+      "source": "Their cousin recently got married in a small ceremony.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R5",
+        "R6"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": null,
+      "suggested_fact": "The user's cousin recently got married.",
+      "model_calls": 1,
+      "tokens": 517,
+      "model_latency_s": 0.49,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.54,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"current\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"The user's cousin recently got married.\"\n}"
+      ],
+      "errors": [],
+      "group": "sibling_family_possession",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "fam_006",
+      "fact": "The user owns a restaurant.",
+      "source": "His father owns a restaurant downtown.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": null,
+      "suggested_fact": "The user's father owns a restaurant.",
+      "model_calls": 1,
+      "tokens": 514,
+      "model_latency_s": 0.59,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.64,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"none\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"The user's father owns a restaurant.\"\n}"
+      ],
+      "errors": [],
+      "group": "sibling_family_possession",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "rep_001",
+      "fact": "The user said the new policy starts in March.",
+      "source": "My colleague said the new policy starts in March.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": null,
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 513,
+      "model_latency_s": 0.54,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.59,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"none\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "reported_speech",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "rep_002",
+      "fact": "The user is moving to Denver.",
+      "source": "My friend mentioned she is moving to Denver next month.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge > escalation",
+      "rules": [
+        "R3",
+        "R6",
+        "R12"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": "My friend mentioned she is moving to Denver next month.",
+      "suggested_fact": "The user's friend is moving to Denver next month.",
+      "model_calls": 2,
+      "tokens": 1053,
+      "model_latency_s": 1.24,
+      "local_latency_s": 0.05,
+      "total_latency_s": 1.29,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"changed\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"The user's friend is moving to Denver.\"\n}",
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"current\",\n  \"verdict\": \"contradicted\",\n  \"quote\": \"My friend mentioned she is moving to Denver next month.\",\n  \"suggested_fact\": \"The user's friend is moving to Denver next month.\"\n}"
+      ],
+      "errors": [],
+      "group": "reported_speech",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "rep_003",
+      "fact": "The user doesn't agree with the new schedule.",
+      "source": "My boss explained he doesn't agree with the new schedule.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Local attribution guard flagged this sentence; a model cannot override it.",
+      "quote": "My boss explained he doesn't agree with the new schedule.",
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 524,
+      "model_latency_s": 0.51,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.56,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"current\",\n  \"verdict\": \"supported\",\n  \"quote\": \"My boss explained he doesn't agree with the new schedule.\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "reported_speech",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "rep_004",
+      "fact": "The user can't make the deadline.",
+      "source": "My teammate claimed she can't make the deadline.",
+      "expected": [
+        "REVIEW"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": true,
+      "route": "local > judge > escalation",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "Model says the fact is about someone else.",
+      "quote": "My teammate claimed she can't make the deadline.",
+      "suggested_fact": "The user's teammate claimed she can't make the deadline.",
+      "model_calls": 2,
+      "tokens": 1044,
+      "model_latency_s": 1.23,
+      "local_latency_s": 0.05,
+      "total_latency_s": 1.28,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"none\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"\"\n}",
+        "{\n  \"subject\": \"third_party\",\n  \"temporal\": \"current\",\n  \"verdict\": \"contradicted\",\n  \"quote\": \"My teammate claimed she can't make the deadline.\",\n  \"suggested_fact\": \"The user's teammate claimed she can't make the deadline.\"\n}"
+      ],
+      "errors": [],
+      "group": "reported_speech",
+      "corpus_expected": "uncertain",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "neg_001",
+      "fact": "The user is allergic to peanuts.",
+      "source": "I am allergic to peanuts.",
+      "expected": [
+        "STORE"
+      ],
+      "local_verdict": "STORE",
+      "local_correct": true,
+      "final_verdict": "STORE",
+      "final_correct": true,
+      "route": "local",
+      "rules": [
+        "R9"
+      ],
+      "reason": "Local checks passed with no flags.",
+      "quote": null,
+      "suggested_fact": null,
+      "model_calls": 0,
+      "tokens": 0,
+      "model_latency_s": 0,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.05,
+      "raw_model_replies": [],
+      "errors": [],
+      "group": "negative_control",
+      "corpus_expected": "accepted",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "neg_002",
+      "fact": "The user found a new apartment.",
+      "source": "I told her about the new apartment I found.",
+      "expected": [
+        "STORE"
+      ],
+      "local_verdict": "STORE",
+      "local_correct": true,
+      "final_verdict": "STORE",
+      "final_correct": true,
+      "route": "local",
+      "rules": [
+        "R9"
+      ],
+      "reason": "Local checks passed with no flags.",
+      "quote": null,
+      "suggested_fact": null,
+      "model_calls": 0,
+      "tokens": 0,
+      "model_latency_s": 0,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.05,
+      "raw_model_replies": [],
+      "errors": [],
+      "group": "negative_control",
+      "corpus_expected": "accepted",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "neg_003",
+      "fact": "The user loves eating peanuts.",
+      "source": "I had a great salad for lunch.",
+      "expected": [
+        "REJECT"
+      ],
+      "local_verdict": "REJECT",
+      "local_correct": true,
+      "final_verdict": "REVIEW",
+      "final_correct": false,
+      "route": "local > judge > escalation",
+      "rules": [
+        "R4"
+      ],
+      "reason": "Both models were unsure; a person should decide.",
+      "quote": null,
+      "suggested_fact": null,
+      "model_calls": 2,
+      "tokens": 1015,
+      "model_latency_s": 1.12,
+      "local_latency_s": 4.0,
+      "total_latency_s": 5.12,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"unclear\",\n  \"temporal\": \"none\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"\"\n}",
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"none\",\n  \"verdict\": \"unclear\",\n  \"quote\": \"\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "negative_control",
+      "corpus_expected": "rejected_with_reason",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "neg_004",
+      "fact": "The user switched jobs last week.",
+      "source": "I switched jobs last week and my manager was thrilled.",
+      "expected": [
+        "STORE"
+      ],
+      "local_verdict": "REVIEW",
+      "local_correct": false,
+      "final_verdict": "REVIEW",
+      "final_correct": false,
+      "route": "local > judge",
+      "rules": [
+        "R3",
+        "R5",
+        "R6"
+      ],
+      "reason": "Local attribution guard flagged this sentence; a model cannot override it.",
+      "quote": "I switched jobs last week",
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 514,
+      "model_latency_s": 0.5,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.55,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"current\",\n  \"verdict\": \"supported\",\n  \"quote\": \"I switched jobs last week\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "negative_control",
+      "corpus_expected": "accepted",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "temporal_001_delhi_bangalore",
+      "fact": "The user lives in Bangalore.",
+      "source": "I moved from Delhi to Bangalore last month.",
+      "expected": [
+        "STORE"
+      ],
+      "local_verdict": "REJECT",
+      "local_correct": false,
+      "final_verdict": "STORE",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R4",
+        "R5"
+      ],
+      "reason": "Model found supporting evidence with a verified quote.",
+      "quote": "I moved from Delhi to Bangalore last month.",
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 514,
+      "model_latency_s": 0.45,
+      "local_latency_s": 0.06,
+      "total_latency_s": 0.52,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"current\",\n  \"verdict\": \"supported\",\n  \"quote\": \"I moved from Delhi to Bangalore last month.\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "temporal_shift",
+      "corpus_expected": "accepted",
+      "safe": true,
+      "local_safe": false
+    },
+    {
+      "case": "temporal_002_simple_move",
+      "fact": "The user lives in Chennai.",
+      "source": "I moved to Chennai last week.",
+      "expected": [
+        "STORE"
+      ],
+      "local_verdict": "STORE",
+      "local_correct": true,
+      "final_verdict": "STORE",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R5"
+      ],
+      "reason": "Model found supporting evidence with a verified quote.",
+      "quote": "I moved to Chennai last week.",
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 510,
+      "model_latency_s": 0.65,
+      "local_latency_s": 0.05,
+      "total_latency_s": 0.71,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"current\",\n  \"verdict\": \"supported\",\n  \"quote\": \"I moved to Chennai last week.\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "temporal_shift",
+      "corpus_expected": "accepted",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "temporal_003_used_to_live",
+      "fact": "The user lives in Bangalore.",
+      "source": "I used to live in Delhi but now I live in Bangalore.",
+      "expected": [
+        "STORE"
+      ],
+      "local_verdict": "STORE",
+      "local_correct": true,
+      "final_verdict": "STORE",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R5"
+      ],
+      "reason": "Model found supporting evidence with a verified quote.",
+      "quote": "now I live in Bangalore.",
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 515,
+      "model_latency_s": 0.53,
+      "local_latency_s": 0.06,
+      "total_latency_s": 0.58,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"current\",\n  \"verdict\": \"supported\",\n  \"quote\": \"now I live in Bangalore.\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "temporal_shift",
+      "corpus_expected": "accepted",
+      "safe": true,
+      "local_safe": true
+    },
+    {
+      "case": "temporal_004_job_change",
+      "fact": "The user works as a nurse.",
+      "source": "I used to work as a teacher, but I switched careers and now work as a nurse.",
+      "expected": [
+        "STORE"
+      ],
+      "local_verdict": "STORE",
+      "local_correct": true,
+      "final_verdict": "STORE",
+      "final_correct": true,
+      "route": "local > judge",
+      "rules": [
+        "R5"
+      ],
+      "reason": "Model found supporting evidence with a verified quote.",
+      "quote": "now work as a nurse",
+      "suggested_fact": null,
+      "model_calls": 1,
+      "tokens": 522,
+      "model_latency_s": 0.56,
+      "local_latency_s": 0.06,
+      "total_latency_s": 0.62,
+      "raw_model_replies": [
+        "{\n  \"subject\": \"user\",\n  \"temporal\": \"current\",\n  \"verdict\": \"supported\",\n  \"quote\": \"now work as a nurse\",\n  \"suggested_fact\": \"\"\n}"
+      ],
+      "errors": [],
+      "group": "temporal_shift",
+      "corpus_expected": "accepted",
+      "safe": true,
+      "local_safe": true
+    }
+  ]
+}
