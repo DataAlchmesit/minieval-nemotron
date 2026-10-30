@@ -1,5 +1,11 @@
 
 # MiniEval × Nemotron - a memory firewall for personal AI
+[![Live demo](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20demo-Hugging%20Face%20Space-yellow)](https://huggingface.co/spaces/DataAlmesit/minieval-nemotron)
+[![Video](https://img.shields.io/badge/Video-YouTube-red?logo=youtube)](YOUR_VIDEO_LINK)
+[![Pitch deck](https://img.shields.io/badge/Pitch%20deck-PDF-blue)](docs/MiniEval_pitch_deck.pdf)
+[![minieval-pro](https://img.shields.io/badge/minieval--pro-1.2.1-blue)](https://pypi.org/project/minieval-pro/1.2.1/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 **Every personal AI is racing to remember more. MiniEval decides what is true enough to remember.**
 
