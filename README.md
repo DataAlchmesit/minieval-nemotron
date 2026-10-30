@@ -1,5 +1,5 @@
 
-# MiniEval × Nemotron — a memory firewall for personal AI
+# MiniEval × Nemotron - a memory firewall for personal AI
 
 **Every personal AI is racing to remember more. MiniEval decides what is true enough to remember.**
 
@@ -66,6 +66,9 @@ Self-authored: a smoke test, not a benchmark.
 - **Cost:** about 5,700 tokens per full 15-case run; 9 of 15 cases needed Nemotron, 6 were settled locally for free.
 - **Speed:** 0.6–1.4 s per escalated fact (about 7–8 s for the first call of a session while the connection is set up).
 
+<img width="885" height="738" alt="Screenshot 2026-10-30 121006" src="https://github.com/user-attachments/assets/ba19ef81-4039-4095-9b63-4595a8c469f3" />
+
+
 ### 2. Regression corpus contributed to Mem0 (`scripts/corpus_eval.py`)
 18 cases (family possession, reported speech, negative controls, temporal shifts), written
 for [mem0ai/mem0#7283](https://github.com/mem0ai/mem0/issues/7283) before this cascade existed.
@@ -82,6 +85,9 @@ rule held it because the local guard had flagged "my manager" (a measured cost o
 in `neg_003` both Nano and Ultra judged "unclear" where the corpus says "rejected", a debatable
 label (a salad lunch doesn't contradict liking peanuts). The two temporal cases previously
 marked *untested* passed, showing the NLI failure is specific to "moved FROM X TO Y".
+
+<img width="933" height="745" alt="Screenshot 2026-10-30 121023" src="https://github.com/user-attachments/assets/358ca6ec-2f07-43e3-9c4b-cc0e950a4f4d" />
+
 
 **Cases worth reading:**
 
