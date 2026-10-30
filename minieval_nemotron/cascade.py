@@ -113,9 +113,20 @@ def decide(
                         reason=f"No usable model reply after retry: {result.reason}", **base)
 
     parsed = result.parsed
+    verdict, reason = result.verdict, result.reason
+
+    # A hedge or a plan ("I'll probably switch to Python") is not a fact yet.
+    # Found live: Nemotron 3.5 Lightning called it "supported, current" with a
+    # genuine quote. A verified quote proves the words exist, not that the model
+    # read them right, so a model may not store a hedged fact on its own.
+    if verdict == "STORE" and "R12" in r.rules and policy.hedge_never_auto_store:
+        verdict = "REVIEW"
+        reason = ("Hedged or future wording: the model judged it supported, but a plan "
+                  "or guess is not a fact yet, so a person should confirm it.")
+
     return Decision(
-        verdict=result.verdict,
-        reason=result.reason,
+        verdict=verdict,
+        reason=reason,
         route=path,
         model_calls=calls,
         quote=(parsed.quote or None) if parsed else None,

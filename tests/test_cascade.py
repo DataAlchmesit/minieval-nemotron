@@ -120,6 +120,15 @@ def test_hedged_future_plan_is_escalated_not_stored():
     assert r.destination == "JUDGE" and "R12" in r.rules
 
 
+def test_model_cannot_store_a_hedged_plan():
+    # Found live: Nemotron 3.5 Lightning returned exactly this for the hedge case.
+    src = "I think I'll probably switch to Python next year."
+    model = FakeModel(reply("supported", temporal="current", quote=src))
+    d = decide(Candidate("The user uses Python.", src), LocalResult("STORE", entailment=0.97), model)
+    assert d.verdict == "REVIEW" and "R12" in d.rules
+    assert d.quote == src  # evidence still recorded for the reviewer
+
+
 def test_plain_statement_has_no_hedge():
     c = Candidate("The user lives in Chennai.", "I live in Chennai.")
     assert route(c, LocalResult("STORE"), POLICY).rules == ["R9"]

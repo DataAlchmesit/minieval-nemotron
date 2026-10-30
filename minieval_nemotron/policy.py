@@ -83,7 +83,7 @@ class CascadePolicy:
     version: str = "0.1.0"
 
     # Models (Token Factory IDs). Confirm with `day1_smoke_test.py --list`.
-    judge_model: str = "nvidia/nemotron-3-nano-30b-a3b"
+    judge_model: str = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
     escalation_model: str = "nvidia/Nemotron-3-Ultra-550b-a55b"
     prompt_version: str = PROMPT_VERSION
     temperature: float = 0.0
@@ -101,6 +101,9 @@ class CascadePolicy:
     # If the local attribution guard flagged the sentence, a model may NOT
     # upgrade the fact to STORE. Keeps injection and misattribution out.
     allow_attribution_override: bool = False
+    # If R12 (hedged/future wording) fired, a model may NOT upgrade the fact to
+    # STORE either: plans and guesses go to a person.
+    hedge_never_auto_store: bool = True
 
     extra: dict = field(default_factory=dict)
 
